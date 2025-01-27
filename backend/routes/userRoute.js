@@ -10,6 +10,6 @@ userRouter.post('/register', registerUser);   //encpoint as register
 userRouter.post('/login', loginUser); //endpoint as login 
 
 // Admin login
-userRouter.post('/admin/login', loginAdmin); // end point as admin/login
+userRouter.post('/admin', loginAdmin); // end point as admin/login
 
 export default userRouter;

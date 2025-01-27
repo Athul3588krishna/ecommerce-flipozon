@@ -77,24 +77,17 @@ const registerUser = async (req, res) => {
 // Route for admin login
 const loginAdmin = async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Assuming admins have a specific field or are in a separate collection
-        const admin = await userModel.findOne({ email, isAdmin: true });
-        if (!admin) {
-            return res.status(404).json({ success: false, message: "Admin not found" });
+        const {email,password}=req.body
+        if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+            const token = jwt.sign(email+password,process.env.JWT_SECRET);
+            res.json({success:true,message:"Admin Login Successfull"})
+        }else{
+            res.json({success:false,message:"Invalid details,so can't login "})
         }
-
-        const isPasswordCorrect = await bcrypt.compare(password, admin.password);
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
-        }
-
-        const token = createToken(admin._id);
-        res.status(200).json({ success: true, message: "Admin login successful", token });
+        
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: "Something went wrong" });
+    res.json({success:false,message:"something error at admin login"})        
+      
     }
 };
 
