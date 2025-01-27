@@ -24,8 +24,9 @@ app.use(cors());
 app.use('/api/user',userRouter)
 app.use('/api/product',productRouter)
 
+
 app.get('/', (req, res) => {
     res.status(200).send('Ellam ok alle boss')
 });
 
-app.listen(port, () => console.log(`Server start ayi tto ee port il ${port}`));
+app.listen(port, () => console.log(`Server started running on this ${port}`));

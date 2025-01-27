@@ -8,7 +8,6 @@ const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET)
 };
 
-// Route for user login
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -16,23 +15,23 @@ const loginUser = async (req, res) => {
         // Check if the user exists
         const user = await userModel.findOne({ email });
         if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
+            return res.status(404).json({ success: false, message: "User doesn't exist" });
         }
 
         // Compare the provided password with the hashed password
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
+        if (isPasswordCorrect) {
+            const token = createToken(user._id);
+            res.json({ success: true,message:"Login Successfull" });
+        } else {
+            res.json({ success: false, message: 'Invalid credentials' });
         }
-
-        // Generate a token
-        const token = createToken(user._id);
-        res.status(200).json({ success: true, message: "Login successful", token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
+
 
 // Route for user registration
 const registerUser = async (req, res) => {
