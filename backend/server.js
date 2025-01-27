@@ -13,7 +13,7 @@ import productRouter from './routes/productRoute.js';
 const app = express();
 const port = process.env.PORT || 3588;
 connectDB();
-connectCloudinary
+connectCloudinary()
 
 //Middlewares
 app.use(express.json());
@@ -28,4 +28,4 @@ app.get('/', (req, res) => {
     res.status(200).send('Ellam ok alle boss')
 });
 
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => console.log(`Server start ayi tto ee port il ${port}`));

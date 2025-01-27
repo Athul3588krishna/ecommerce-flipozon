@@ -4,12 +4,12 @@ import { loginUser, registerUser, loginAdmin } from '../controllers/userControll
 const userRouter = express.Router();
 
 // Register a new user
-userRouter.post('/register', registerUser);
+userRouter.post('/register', registerUser);   //encpoint as register
 
 // User login
-userRouter.post('/login', loginUser);
+userRouter.post('/login', loginUser); //endpoint as login 
 
 // Admin login
-userRouter.post('/admin/login', loginAdmin);
+userRouter.post('/admin/login', loginAdmin); // end point as admin/login
 
 export default userRouter;
