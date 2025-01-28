@@ -5,12 +5,11 @@ const addProduct = async (req, res) => {
     try {
         const { name, description, price, category, subCategroy, sizes, bestSeller } = req.body;
 
-        // Access files from req.files (image1, image2, etc.)
-        const image1 = req.files?.image1?.[0];
-        const image2 = req.files?.image2?.[0];
-        const image3 = req.files?.image3?.[0];
-        const image4 = req.files?.image4?.[0];
-
+        // Access files from req.files (image1, image2, image3,image4.)
+        const image1=req.files.image1 && req.files.image1[0];
+        const image2=req.files.image1 && req.files.image2[0];
+        const image3=req.files.image1 && req.files.image3[0];
+        const image4=req.files.image1 && req.files.image4[0];
         // Check if all images are uploaded
         if (!image1 || !image2 || !image3 || !image4) {
             return res.status(400).json({ success: false, message: "All images are required" });
