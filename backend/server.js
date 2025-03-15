@@ -1,32 +1,34 @@
-import express from 'express';
-import cors from 'cors';
-import 'dotenv/config';
-import exp from 'constants';
-import connectDB from './config/mdb.js';
-import connectCloudinary from './config/cloudinary.js';
-import userRouter from './routes/userRoute.js';
-import productRouter from './routes/productRoute.js';
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const http = require('http');
+const { Server } = require('socket.io');
+const authRouter = require('./router/auth');
+const rideRouter = require('./router/ride');
+const driverRouter = require('./router/driver');
 
-
-
-// App configuartion
 const app = express();
-const port = process.env.PORT || 3588;
-connectDB();
-connectCloudinary()
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: 'http://localhost:3000' } });
 
-//Middlewares
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+global.io = io;
 
-// API Endpoints 
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
 
-app.use('/api/user',userRouter)
-app.use('/api/product',productRouter)
-
-
-app.get('/', (req, res) => {
-    res.status(200).send('Ellam ok alle boss')
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+  socket.on('join', (userId) => socket.join(userId));
+  socket.on('disconnect', () => console.log('User disconnected:', socket.id));
 });
 
-app.listen(port, () => console.log(`Server started running on this ${port}`));
+app.use('/api/auth', authRouter);
+app.use('/api/ride', rideRouter);
+app.use('/api/driver', driverRouter);
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
